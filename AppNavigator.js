@@ -1,8 +1,13 @@
-import { createStackNavigator } from 'react-navigation';
+import {
+  createStackNavigator,
+  createAppContainer
+} from 'react-navigation';
+
 import Home from './Home';
 
-const AppNavigator = createStackNavigator({
+const StackNavigator = createStackNavigator({
   Home: { screen: Home },
 });
+const AppNavigator = createAppContainer(StackNavigator);
 
 export default AppNavigator;

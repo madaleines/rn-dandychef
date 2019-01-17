@@ -5,7 +5,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        We have no friends!
+        <Text>We have no friends!</Text>
       </View>
     );
   }

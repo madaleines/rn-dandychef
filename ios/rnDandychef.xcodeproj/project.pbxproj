@@ -36,6 +36,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* rnDandychefTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* rnDandychefTests.m */; };
 		68B70528A2734DEA89C8B214 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8C743C046423C960F2237 /* libRNFirebase.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		8A3EE50921F0405A004AD705 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AA14DA721F02BCF00E2F3D4 /* libRNGestureHandler.a */; };
 		8AA1F14121E941A400307234 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8AA1F14021E941A400307234 /* GoogleService-Info.plist */; };
 		A038CD85D39748E122AC50D7 /* libPods-rnDandychef.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 333056BA5B7ADABE709DF4A1 /* libPods-rnDandychef.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -379,6 +380,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A3EE50921F0405A004AD705 /* libRNGestureHandler.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -1362,6 +1364,7 @@
 				DISPLAY_NAME = rnDandychef;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = rnDandychef/Info.plist;
@@ -1386,6 +1389,7 @@
 				DISPLAY_NAME = rnDandychef;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 				);
 				INFOPLIST_FILE = rnDandychef/Info.plist;

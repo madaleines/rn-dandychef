@@ -27,8 +27,4 @@ target 'rnDandychef' do
   pod 'GoogleAppMeasurement', '~> 5.3.0'
   pod 'Crashlytics', '~> 3.10.9'
 
-
-
-  #pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
-
 end
