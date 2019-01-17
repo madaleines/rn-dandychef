@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, Button, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
-export default class Home extends React.Component {
+export default class Recipes extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Would you like to Add a Recipe?</Text>
+        <Text>Add recipes here!</Text>
         <Button
-          title="Add some recipes"
+          title="Back to home"
           onPress={() =>
-            this.props.navigation.navigate('Recipes')
+            this.props.navigation.navigate('Home')
           }
         />
       </View>
