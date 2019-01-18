@@ -27,4 +27,24 @@ target 'rnDandychef' do
   pod 'GoogleAppMeasurement', '~> 5.3.0'
   pod 'Crashlytics', '~> 3.10.9'
 
+  pod "yoga", :path => "../node_modules/react-native/ReactCommon/yoga"
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'DevSupport',
+    'RCTNetwork',
+    'RCTWebSocket'
+  ]
+
+  pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
+
+  pod 'GoogleSignIn'
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      if target.name == "React"
+        target.remove_from_project
+      end
+    end
+  end
+
 end

@@ -5,7 +5,7 @@ export default class Recipes extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Add recipes here!</Text>
+        <Text>Add A Recipe!</Text>
         <Button
           title="Back to home"
           onPress={() =>
