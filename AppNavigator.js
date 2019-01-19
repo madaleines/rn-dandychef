@@ -4,14 +4,11 @@ import {
 } from 'react-navigation';
 
 import Home from './Home';
-import Recipes from './Recipes';
-import Login from './Login';
-
+import Dashboard from './Dashboard';
 
 const StackNavigator = createStackNavigator({
   Home: { screen: Home },
-  Recipes: { screen: Recipes },
-  Login: { screen: Login },
+  Dashboard: { screen: Dashboard },
 });
 const AppNavigator = createAppContainer(StackNavigator);
 
