@@ -1,65 +1,104 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+// import React from 'react';
+// import { StyleSheet, Text, View, Button } from 'react-native';
+// import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+//
+// export default class Dashboard extends React.Component {
+//
+//   constructor(props) {
+//     super(props)
+//
+//     this.signOut = this.signOut.bind(this);
+//   }
+//
+//   signOut() {
+//     this.props.navigation.navigate('Home')
+//   }
+//
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <Text> Welcome User </Text>
+//         <Text>Add A Recipe!</Text>
+//         <Button
+//           title="Logout"
+//           onPress={() => {
+//             this.signOut()
+//           }}
+//         />
+//       </View>
+//     );
+//   }
+// }
+//
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });
 
-export default class Dashboard extends React.Component {
 
+import React, { Component } from "react";
+import { List, ListItem } from "react-native-elements";
+import { View, Text, FlatList } from "react-native";
+
+class Dashboard extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.signOut = this.signOut.bind(this);
+    this.state = {
+      loading: false,
+      data: [],
+      page: 1,
+      seed: 1,
+      error: null,
+      refreshing: false,
+    };
   }
 
-  signOut() {
-    this.props.navigation.navigate('Home')
-
-    // ### Styles of Async Calls
-    //1: async / await pattern ^
-
-    //2: Promises (modern)
-    // GoogleSignin.revoke().then((response) => {
-    //   // do stuff with response
-    // return Google.doOtherThingOnTheInternetThatReturnsAPromise()
-    // })
-    // .then((responseToThatOtherThing) => {
-    //  do stuff
-    // })
-    // .catch((error) => {
-    //   //do stuff with error?
-    // this error is the first error that happens
-    // })
-
-    //3: Callbacks (this is shit - see ES5 and ObjectiveC)
-    // doAsyncThing is a method which takes a 'callback' as a parameter
-    // doAsyncThing((response) => {
-      // second layer of the callback
-        // doSecondAsyncThingWithCallback((callback2) => {
-        //
-        // })
-    // })
+  componentDidMount() {
+    this.makeRemoteRequest();
   }
+
+  makeRemoteRequest = () => {
+    const { page, seed } = this.state;
+    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+    this.setState({ loading: true });
+    fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          data: page === 1 ? res.results : [...this.state.data, ...res.results],
+          error: res.error || null,
+          loading: false,
+          refreshing: false
+        });
+      })
+      .catch(error => {
+        this.setState({ error, loading: false });
+      });
+  };
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text> Welcome User </Text>
-        <Text>Add A Recipe!</Text>
-        <Button
-          title="Logout"
-          onPress={() => {
-            this.signOut()
-          }}
+      // <View>HELLO</View>
+      <List>
+        <FlatList
+          data={this.state.data}
+          renderItem={({ item }) => (
+            <ListItem
+              roundAvatar
+              title={`${item.name.first} ${item.name.last}`}
+              subtitle={item.email}
+              avatar={{ uri: item.picture.thumbnail }}
+            />
+          )}
         />
-      </View>
+    </List>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default Dashboard;

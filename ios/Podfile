@@ -39,6 +39,8 @@ target 'rnDandychef' do
 
   pod 'GoogleSignIn'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|
       if target.name == "React"
