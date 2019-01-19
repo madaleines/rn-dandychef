@@ -53,7 +53,7 @@ export default class Home extends React.Component {
 
   async componentDidMount() {
     this._configureGoogleSignIn();
-    // await this._getCurrentUser();
+    await this._getCurrentUser();
   }
 
   _configureGoogleSignIn() {
