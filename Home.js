@@ -16,15 +16,44 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      didSignIn: false,
       userInfo: null,
       error: null,
     };
+    this._getCurrentUser = this._getCurrentUser.bind(this)
+    this.signOut = this.signOut.bind(this);
   }
+
+  async signOut() {
+    // GoogleSignin.revokeAccess()
+    // .then((response) => {
+    //   return GoogleSignin.signOut()
+    // })
+    // .then((response) => {
+    //   this.setState({ userInfo: null, error: null });
+    // })
+    // .catch((error) => {
+    //   this.setState({
+    //     error,
+    //   });
+    // })
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+
+      this.setState({ userInfo: null, error: null });
+    } catch (error) {
+      console.log(`Error in Home ${error}`)
+      this.setState({
+        error,
+      });
+    }
+  };
+
 
   async componentDidMount() {
     this._configureGoogleSignIn();
-    // console.log(`${}`)
-    await this._getCurrentUser();
+    // await this._getCurrentUser();
   }
 
   _configureGoogleSignIn() {
@@ -35,10 +64,17 @@ export default class Home extends React.Component {
   }
 
   async _getCurrentUser() {
+    console.log('Starting sign in.')
     try {
       const userInfo = await GoogleSignin.signInSilently();
-      this.setState({ userInfo, error: null });
+      console.log(`Signed in success.`)
+      const { navigate } = this.props.navigation;
+      this.setState({ didSignIn: true }, () => {
+        console.log('Pre-navigate setState success.')
+        navigate('Dashboard');
+      })
     } catch (error) {
+      console.log(`Error in Home ${error}`)
       const errorMessage =
         error.code === statusCodes.SIGN_IN_REQUIRED ? 'Please sign in :)' : error.message;
       this.setState({
@@ -49,12 +85,13 @@ export default class Home extends React.Component {
 
   render() {
     const { userInfo } = this.state;
-
-    const body = userInfo ? this.renderUserInfo(userInfo) : this.renderSignInButton();
+    if(this.state.didSignIn){
+      this.signOut();
+    }
     return (
       <View style={[styles.container, { flex: 1 }]}>
         {this.renderIsSignedIn()}
-        {body}
+        {this.renderSignInButton()}
       </View>
     );
   }
@@ -66,7 +103,7 @@ export default class Home extends React.Component {
           const isSignedIn = await GoogleSignin.isSignedIn();
           Alert.alert(String(isSignedIn));
         }}
-        title="is user signed in?"
+        title="check auth state"
       />
     );
   }
@@ -112,9 +149,11 @@ export default class Home extends React.Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      this.setState({ userInfo, error: null });
+      this.setState({ userInfo, error: null, didSignIn: true }, () => {
+        const { navigate } = this.props.navigation;
+        navigate('Dashboard');
+      });
     } catch (error) {
-      console.log(`Error: ${error}`)
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // sign in was cancelled
         Alert.alert('cancelled');
@@ -132,18 +171,7 @@ export default class Home extends React.Component {
     }
   };
 
-  _signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
 
-      this.setState({ userInfo: null, error: null });
-    } catch (error) {
-      this.setState({
-        error,
-      });
-    }
-  };
 }
 
 const styles = StyleSheet.create({
