@@ -67,18 +67,18 @@ class Dashboard extends Component {
     const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
     this.setState({ loading: true });
     fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: page === 1 ? res.results : [...this.state.data, ...res.results],
-          error: res.error || null,
-          loading: false,
-          refreshing: false
-        });
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
+    .then(res => res.json())
+    .then(res => {
+      this.setState({
+        data: page === 1 ? res.results : [...this.state.data, ...res.results],
+        error: res.error || null,
+        loading: false,
+        refreshing: false
       });
+    })
+    .catch(error => {
+      this.setState({ error, loading: false });
+    });
   };
 
   renderSeparator = () => {
@@ -90,7 +90,7 @@ class Dashboard extends Component {
           backgroundColor: "#CED0CE",
           marginLeft: "14%"
         }}
-      />
+        />
     );
   };
 
@@ -109,7 +109,7 @@ class Dashboard extends Component {
           borderTopWidth: 1,
           borderColor: "#CED0CE"
         }}
-      >
+        >
         <ActivityIndicator animating size="large" />
       </View>
     );
@@ -119,25 +119,30 @@ class Dashboard extends Component {
 
   render() {
     return (
-    <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-      <FlatList
-        ItemSeparatorComponent={this.renderSeparator}
-        ListHeaderComponent={this.renderHeader}
-        ListFooterComponent={this.renderFooter}
-        data={this.state.data}
-        renderItem={({ item }) => (
-          <ListItem
-            roundAvatar
-            title={`${item.name.first} ${item.name.last}`}
-            subtitle={item.email}
-            avatar={{ uri: item.picture.thumbnail }}
-            containerStyle={{ borderBottomWidth: 0 }}
-          />
-        )}
-        keyExtractor={item => item.email}
-      />
-    </List>
-  );
+      <View>
+        <Text>Welcome USER</Text>
+        <Text>Button on press Add Recipe Component</Text>
+
+        <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+          <FlatList
+            ItemSeparatorComponent={this.renderSeparator}
+            ListHeaderComponent={this.renderHeader}
+            ListFooterComponent={this.renderFooter}
+            data={this.state.data}
+            renderItem={({ item }) => (
+              <ListItem
+                roundAvatar
+                title={`${item.name.first} ${item.name.last}`}
+                subtitle={item.email}
+                avatar={{ uri: item.picture.thumbnail }}
+                containerStyle={{ borderBottomWidth: 0 }}
+                />
+            )}
+            keyExtractor={item => item.email}
+            />
+        </List>
+      </View>
+    );
   }
 }
 
