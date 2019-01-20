@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.mlkit.RNMlKitPackage;
+import org.reactnative.camera.RNCameraPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -47,6 +49,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
         new MainReactPackage(),
+            new RNMlKitPackage(),
+            new RNCameraPackage(),
             new VectorIconsPackage(),
             new RNGoogleSigninPackage(),
             new RNFirebasePackage(),
