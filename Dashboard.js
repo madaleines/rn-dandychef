@@ -1,48 +1,6 @@
-// import React from 'react';
-// import { StyleSheet, Text, View, Button } from 'react-native';
-// import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
-//
-// export default class Dashboard extends React.Component {
-//
-//   constructor(props) {
-//     super(props)
-//
-//     this.signOut = this.signOut.bind(this);
-//   }
-//
-//   signOut() {
-//     this.props.navigation.navigate('Home')
-//   }
-//
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <Text> Welcome User </Text>
-//         <Text>Add A Recipe!</Text>
-//         <Button
-//           title="Logout"
-//           onPress={() => {
-//             this.signOut()
-//           }}
-//         />
-//       </View>
-//     );
-//   }
-// }
-//
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
-
 import React, { Component } from "react";
 import { List, ListItem, SearchBar } from "react-native-elements";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Button } from "react-native";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -98,7 +56,6 @@ class Dashboard extends Component {
     return <SearchBar placeholder="Search for a Saved Recipe..." lightTheme round />;
   };
 
-
   renderFooter = () => {
     if (!this.state.loading) return null;
 
@@ -115,13 +72,30 @@ class Dashboard extends Component {
     );
   };
 
+  signOut() {
+    this.props.navigation.navigate('Home')
+  }
 
+  addRecipe() {
+    this.props.navigation.navigate('AddRecipe')
+  }
 
   render() {
     return (
       <View>
         <Text>Welcome USER</Text>
-        <Text>Button on press Add Recipe Component</Text>
+        <Button
+          title="Add Recipe"
+          onPress={() => {
+            this.addRecipe()
+          }}
+          />
+        <Button
+          title="Logout"
+          onPress={() => {
+            this.signOut()
+          }}
+          />
 
         <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
           <FlatList
