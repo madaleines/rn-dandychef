@@ -222,7 +222,7 @@ PODS:
     - React
   - RNSVG (9.0.0):
     - React
-  - RNVectorIcons (6.1.0):
+  - RNVectorIcons (6.2.0):
     - React
   - yoga (0.57.1.React)
 

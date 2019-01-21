@@ -76,8 +76,8 @@ class Dashboard extends Component {
     this.props.navigation.navigate('Home')
   }
 
-  addRecipe() {
-    this.props.navigation.navigate('AddRecipe')
+  snapRecipe() {
+    this.props.navigation.navigate('SnapRecipe')
   }
 
   render() {
@@ -87,7 +87,7 @@ class Dashboard extends Component {
         <Button
           title="Add Recipe"
           onPress={() => {
-            this.addRecipe()
+            this.snapRecipe()
           }}
           />
         <Button
