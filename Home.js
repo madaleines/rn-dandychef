@@ -76,7 +76,7 @@ export default class Home extends React.Component {
     } catch (error) {
       console.log(`Error in Home ${error}`)
       const errorMessage =
-        error.code === statusCodes.SIGN_IN_REQUIRED ? 'Please sign in :)' : error.message;
+        error.code === statusCodes.SIGN_IN_REQUIRED ? 'I love you :)' : error.message;
       this.setState({
         error: new Error(errorMessage),
       });

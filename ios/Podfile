@@ -40,6 +40,7 @@ target 'rnDandychef' do
     'RCTWebSocket', # Needed for debugging
     'RCTAnimation', # Needed for FlatList and animations running on native UI thread
     # Add any other subspecs you want to use in your project
+    'RCTImage'
   ]
 
   pod 'react-native-camera', path: '../node_modules/react-native-camera', subspecs: [
@@ -51,6 +52,8 @@ target 'rnDandychef' do
   pod 'GoogleSignIn'
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|

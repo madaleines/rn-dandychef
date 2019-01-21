@@ -206,6 +206,9 @@ PODS:
     - React/Core
   - React/RCTBlob (0.57.1):
     - React/Core
+  - React/RCTImage (0.57.1):
+    - React/Core
+    - React/RCTNetwork
   - React/RCTNetwork (0.57.1):
     - React/Core
   - React/RCTText (0.57.1):
@@ -216,6 +219,8 @@ PODS:
     - React/RCTBlob
   - RNGoogleSignin (1.0.2):
     - GoogleSignIn
+    - React
+  - RNSVG (9.0.0):
     - React
   - RNVectorIcons (6.1.0):
     - React
@@ -238,10 +243,12 @@ DEPENDENCIES:
   - React/Core (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - RNGoogleSignin (from `../node_modules/react-native-google-signin`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -286,6 +293,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   RNGoogleSignin:
     :path: "../node_modules/react-native-google-signin"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -326,9 +335,10 @@ SPEC CHECKSUMS:
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
   react-native-camera: a8d04ef12749def72cae86b0b8d28c2de891a392
   RNGoogleSignin: 8b08beabff7f3b1373b2821b0944b38de36ba95e
+  RNSVG: 4834be1d644eb77f0e3f6de851881b83758a3124
   RNVectorIcons: 8c52e1e8da1153613fdef44748e865c25556cb9c
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: 1fbf932cf9fc1a99b85f21034758bdf8b49dfe66
+PODFILE CHECKSUM: c279643e93dc53895e1c75f9ba6a62307334d93a
 
 COCOAPODS: 1.5.3
