@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { List, ListItem, SearchBar } from "react-native-elements";
-import { View, Text, FlatList, Button } from "react-native";
+import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity } from "react-native";
 
 export default class AddRecipe extends React.Component {
   constructor(props) {
@@ -54,30 +54,64 @@ export default class AddRecipe extends React.Component {
 
   render() {
     return (
-      <View>
-      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-        <FlatList
-          ItemSeparatorComponent={this.renderSeparator}
-          ListFooterComponent={this.renderFooter}
-          data={ this.props.navigation.state.params.textBlocks }
-          renderItem={({ item }) => (
-            <ListItem
-              roundAvatar
-              title={item}
-              containerStyle={{ borderBottomWidth: 0 }}
-              />
-          )}
-          keyExtractor={item => item.email}
-          />
-      </List>
+      <View style={styles.container}>
+        <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+          <FlatList
+            ItemSeparatorComponent={this.renderSeparator}
+            ListFooterComponent={this.renderFooter}
+            data={ this.props.navigation.state.params.textBlocks }
+            renderItem={({ item }) => (
+              <ListItem
+                roundAvatar
+                title={item}
+                containerStyle={{ borderBottomWidth: 0 }}
+                />
+            )}
+            keyExtractor={item => item.email}
+            />
+        </List>
 
-      <Button
-        title="Save Recipe"
-        onPress={() => {
-          this.saveRecipe()
-        }}
-        />
+        <TouchableOpacity onPress={() => alert('FAB clicked')} style={styles.fab}>
+         <Text style={styles.fabIcon}>+</Text>
+       </TouchableOpacity>
       </View>
+
+
     );
   }
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  heading: {
+    height: 60,
+    backgroundColor: '#03A9F4',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headingTest: {
+    fontSize: 20,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  fab: {
+    position: 'absolute',
+    width: 56,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 20,
+    bottom: 20,
+    backgroundColor: '#03A9F4',
+    borderRadius: 30,
+    elevation: 8
+    },
+
+  fabIcon: {
+    fontSize: 40,
+    color: 'white'
+  }
+});
