@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { List, ListItem, SearchBar } from "react-native-elements";
-import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { List, ListItem, SearchBar, ButtonGroup } from "react-native-elements";
+import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TouchableHighlight } from "react-native";
+import firebase from 'react-native-firebase';
+
 
 export default class AddRecipe extends React.Component {
   constructor(props) {
     super(props)
     console.log(props)
 
+    this.ref = firebase.firestore().collection('recipes');
     this.state = {
       loading: false,
       data: [],
@@ -14,7 +17,10 @@ export default class AddRecipe extends React.Component {
       seed: 1,
       error: null,
       refreshing: false,
+      selectedIndex: 2,
+      textInput: '',
     };
+    this.updateIndex = this.updateIndex.bind(this)
   }
 
   renderSeparator = () => {
@@ -48,11 +54,29 @@ export default class AddRecipe extends React.Component {
 
   saveRecipe() {
     // code to save recipe to firestore/firebase
+    this.ref.add({
+      recipe: this.props.navigation.state.params.textBlocks,
+    });
+    this.setState({
+      textInput: '',
+    });
 
     this.props.navigation.navigate('Dashboard')
   }
 
+  updateIndex (selectedIndex) {
+    this.setState({selectedIndex})
+  }
+
+  updateTextInput(value) {
+    this.setState({ textInput: value });
+}
+
   render() {
+    const { selectedIndex } = this.state
+    const buttons = ['Hello', 'World', 'Buttons']
+
+
     return (
       <View style={styles.container}>
         <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
@@ -65,15 +89,24 @@ export default class AddRecipe extends React.Component {
                 roundAvatar
                 title={item}
                 containerStyle={{ borderBottomWidth: 0 }}
+                buttonGroup
+                buttonGroupButtons = {['Yes', 'No']}
+                onPress={() => alert('DO SOMETHING')} style={styles.fab}
                 />
             )}
             keyExtractor={item => item.email}
             />
+          <ButtonGroup
+            onPress={this.updateIndex}
+            selectedIndex={selectedIndex}
+            buttons={buttons}
+            containerStyle={{height: 50}}
+            />
         </List>
 
-        <TouchableOpacity onPress={() => alert('FAB clicked')} style={styles.fab}>
-         <Text style={styles.fabIcon}>+</Text>
-       </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.saveRecipe()} style={styles.fab}>
+          <Text style={styles.fabIcon}>+</Text>
+        </TouchableOpacity>
       </View>
 
 
@@ -108,7 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#03A9F4',
     borderRadius: 30,
     elevation: 8
-    },
+  },
 
   fabIcon: {
     fontSize: 40,
