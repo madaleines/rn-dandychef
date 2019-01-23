@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { List, ListItem, SearchBar, ButtonGroup } from "react-native-elements";
-import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TouchableHighlight, Modal } from "react-native";
+import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TouchableHighlight, Modal, TextInput } from "react-native";
 import firebase from 'react-native-firebase';
 import { MaterialDialog, MultiPickerMaterialDialog } from 'react-native-material-dialog';
 
@@ -16,6 +16,7 @@ export default class AddRecipe extends React.Component {
       error: null,
       refreshing: false,
       selectedIndex: 2,
+      title: '',
       description: '',
       allIngredients: [],
       allDirections: [],
@@ -28,8 +29,6 @@ export default class AddRecipe extends React.Component {
 
   showIngredientsModal = (selectedItem) => this.setState({ isIngredientsModalVisible: true, selectedItem })
   showDirectionsModal = (selectedItem) => this.setState({ isDirectionsModalVisible: true, selectedItem })
-
-  hideModal = () => this.setState({ isModalVisible: false })
 
   renderSeparator = () => {
     return (
@@ -61,9 +60,9 @@ export default class AddRecipe extends React.Component {
   };
 
   saveRecipe() {
-    // code to save recipe to firestore/firebase
     this.ref.add({
       recipe: {
+        title: this.state.title,
         description: this.state.description,
         ingredients: this.state.allIngredients,
         directions: this.state.allDirections
@@ -71,6 +70,7 @@ export default class AddRecipe extends React.Component {
     });
 
     this.setState({
+      title: '',
       description: '',
       allIngredients: [],
       allDirections: []
@@ -83,10 +83,13 @@ export default class AddRecipe extends React.Component {
     this.setState({selectedIndex})
   }
 
-  updateDescription(value) {
-    // code to add ListItem element to the description (maybe have it be a form user maunally types instead?)
+  updateTitle(value) {
+    this.setState({ title: value });
   }
 
+  updateDescription(value) {
+    this.setState({ description: value });
+  }
 
   render() {
     const { selectedIndex } = this.state
@@ -94,6 +97,16 @@ export default class AddRecipe extends React.Component {
 
     return (
       <View style={styles.container}>
+        <TextInput
+          placeholder={'Add Title'}
+          value={this.state.title}
+          onChangeText={(text) => this.updateTitle(text)}
+          />
+          <TextInput
+            placeholder={'Add Description'}
+            value={this.state.description}
+            onChangeText={(text) => this.updateDescription(text)}
+            />
         <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
           <FlatList
             data={ ['Select Ingredients']}
@@ -175,7 +188,6 @@ export default class AddRecipe extends React.Component {
       }
     }
 
-
     const styles = StyleSheet.create({
       container: {
         flex: 1,
@@ -203,7 +215,6 @@ export default class AddRecipe extends React.Component {
         borderRadius: 30,
         elevation: 8
       },
-
       fabIcon: {
         fontSize: 40,
         color: 'white'
