@@ -60,21 +60,14 @@ export default class AddRecipe extends React.Component {
   };
 
   saveRecipe() {
-    this.ref.add({
-      recipe: {
-        title: this.state.title,
-        description: this.state.description,
-        ingredients: this.state.allIngredients,
-        directions: this.state.allDirections
-      },
-    });
+    let newRecipe = {
+      title: this.state.title,
+      description: this.state.description,
+      ingredients: this.state.allIngredients,
+      directions: this.state.allDirections
+    }
 
-    this.setState({
-      title: '',
-      description: '',
-      allIngredients: [],
-      allDirections: []
-    });
+    let recipeAdded = this.ref.add(newRecipe);
 
     this.props.navigation.navigate('Dashboard')
   }

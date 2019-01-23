@@ -16,26 +16,23 @@ class Dashboard extends Component {
       refreshing: false,
       allRecipes: []
     };
+    this.unsubscribe = null;
     this.ref = firebase.firestore().collection('recipes')
-
   }
 
   componentDidMount() {
-    this.getInitial();
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
   }
 
-  getInitial() {
-    firebase.firestore().collection('recipes').get()
-      .then(querySnapshot => {
-        let allRecipes = [];
-        querySnapshot.forEach(documentSnapshot => {
-          let newItem = documentSnapshot.data();
-          newItem.id = documentSnapshot.id;
-          allRecipes.push(newItem);
-          console.log(newItem)
-        });
-        this.setState({ allRecipes });
-      });
+  onCollectionUpdate = (querySnapshot) => {
+    let allRecipes = [];
+    querySnapshot.forEach(documentSnapshot => {
+      let newItem = documentSnapshot.data();
+      newItem.id = documentSnapshot.id;
+      allRecipes.push(newItem);
+      console.log(newItem)
+    });
+    this.setState({ allRecipes });
   }
 
   makeRemoteRequest = () => {
@@ -124,7 +121,7 @@ class Dashboard extends Component {
             renderItem={({ item }) => (
               <ListItem
                 roundAvatar
-                title={`${item.recipe.title}`}
+                title={`${item.title}`}
                 containerStyle={{ borderBottomWidth: 0 }}
                 />
             )}
