@@ -98,15 +98,19 @@ export default class AddRecipe extends React.Component {
     return (
       <View style={styles.container}>
         <TextInput
+          style={styles.input}
           placeholder={'Add Title'}
           value={this.state.title}
           onChangeText={(text) => this.updateTitle(text)}
+          multiline={true}
           />
-          <TextInput
-            placeholder={'Add Description'}
-            value={this.state.description}
-            onChangeText={(text) => this.updateDescription(text)}
-            />
+        <TextInput
+          style={styles.input}
+          placeholder={'Add Description'}
+          value={this.state.description}
+          onChangeText={(text) => this.updateDescription(text)}
+          multiline={true}
+          />
         <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
           <FlatList
             data={ ['Select Ingredients']}
@@ -218,5 +222,9 @@ export default class AddRecipe extends React.Component {
       fabIcon: {
         fontSize: 40,
         color: 'white'
-      }
+      },
+      input: {
+        borderBottomColor:'red',
+        borderBottomWidth: 1,
+      },
     });
