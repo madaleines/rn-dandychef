@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import { List, ListItem, SearchBar, ButtonGroup } from "react-native-elements";
-import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TouchableHighlight } from "react-native";
+import { View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TouchableHighlight, Modal } from "react-native";
 import firebase from 'react-native-firebase';
-import { MaterialDialog } from 'react-native-material-dialog';
-
-
+import { MaterialDialog, MultiPickerMaterialDialog } from 'react-native-material-dialog';
 
 export default class AddRecipe extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
 
     this.ref = firebase.firestore().collection('recipes');
     this.state = {
@@ -23,9 +20,13 @@ export default class AddRecipe extends React.Component {
       description: '',
       allIngredients: [],
       allDirections: [],
+      isModalVisible: false,
     };
     this.updateIndex = this.updateIndex.bind(this)
   }
+
+  showModal = (selectedItem) => this.setState({ isModalVisible: true, selectedItem })
+  hideModal = () => this.setState({ isModalVisible: false })
 
   renderSeparator = () => {
     return (
@@ -95,25 +96,6 @@ export default class AddRecipe extends React.Component {
     }))
   }
 
-  selectOptions() {
-    return (
-      <View style={styles.container}>
-        <MaterialDialog
-          title="Use Google's Location Service?"
-          visible={this.state.visible}
-          onOk={() => this.setState({ visible: false })}
-          onCancel={() => this.setState({ visible: false })}>
-          <Text style={styles.dialogText}>
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
-          </Text>
-        </MaterialDialog>;
-
-      </View>
-
-    )
-  }
-
   render() {
     const { selectedIndex } = this.state
     const buttons = ['Ingredients', 'Directions']
@@ -128,61 +110,75 @@ export default class AddRecipe extends React.Component {
                 title={item}
                 containerStyle={{ borderBottomWidth: 0 }}
                 buttonGroup
-                onPress={this.selectOptions.bind(this)} 
-                style={styles.fab}
-                />
-            )}
-            keyExtractor={item => item}
+                onPress={(item) => {
+                  this.showModal(item)}}
+                  style={styles.fab}
+                  />
+              )}
+              keyExtractor={item => item}
+              />
+            <ButtonGroup
+              onPress={this.updateIndex}
+              selectedIndex={selectedIndex}
+              buttons={buttons}
+              containerStyle={{height: 50}}
+              />
+          </List>
+
+          <MultiPickerMaterialDialog
+            title={'Select from the following:'}
+            scrolled
+            items={this.props.navigation.state.params.textBlocks.map((row, index) => ({ value: index, label: row }))}
+            visible={this.state.isModalVisible}
+            selectedItems={this.state.scrolledMultiPickerSelectedItems}
+            onCancel={() => this.setState({ isModalVisible: false })}
+            onOk={result => {
+              this.setState({ isModalVisible: false });
+              this.setState({
+                scrolledMultiPickerSelectedItems: result.selectedItems,
+              });
+            }}
             />
-          <ButtonGroup
-            onPress={this.updateIndex}
-            selectedIndex={selectedIndex}
-            buttons={buttons}
-            containerStyle={{height: 50}}
-            />
-        </List>
 
-        <TouchableOpacity onPress={() => this.saveRecipe.bind(this)} style={styles.fab}>
-          <Text style={styles.fabIcon}>+</Text>
-        </TouchableOpacity>
-      </View>
-
-
-    );
+          <TouchableOpacity onPress={() => this.saveRecipe.bind(this)} style={styles.fab}>
+            <Text style={styles.fabIcon}>+</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
   }
-}
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  heading: {
-    height: 60,
-    backgroundColor: '#03A9F4',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headingTest: {
-    fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  fab: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 20,
-    bottom: 20,
-    backgroundColor: '#03A9F4',
-    borderRadius: 30,
-    elevation: 8
-  },
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    heading: {
+      height: 60,
+      backgroundColor: '#03A9F4',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headingTest: {
+      fontSize: 20,
+      color: 'white',
+      fontWeight: 'bold',
+    },
+    fab: {
+      position: 'absolute',
+      width: 56,
+      height: 56,
+      alignItems: 'center',
+      justifyContent: 'center',
+      right: 20,
+      bottom: 20,
+      backgroundColor: '#03A9F4',
+      borderRadius: 30,
+      elevation: 8
+    },
 
-  fabIcon: {
-    fontSize: 40,
-    color: 'white'
-  }
-});
+    fabIcon: {
+      fontSize: 40,
+      color: 'white'
+    }
+  });
