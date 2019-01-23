@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import firebase from 'react-native-firebase';
 import { List, ListItem, SearchBar } from "react-native-elements";
 import { View, Text, FlatList, Button } from "react-native";
 
@@ -13,11 +14,28 @@ class Dashboard extends Component {
       seed: 1,
       error: null,
       refreshing: false,
+      allRecipes: []
     };
+    this.ref = firebase.firestore().collection('recipes')
+
   }
 
   componentDidMount() {
-    this.makeRemoteRequest();
+    this.getInitial();
+  }
+
+  getInitial() {
+    firebase.firestore().collection('recipes').get()
+      .then(querySnapshot => {
+        let allRecipes = [];
+        querySnapshot.forEach(documentSnapshot => {
+          let newItem = documentSnapshot.data();
+          newItem.id = documentSnapshot.id;
+          allRecipes.push(newItem);
+          console.log(newItem)
+        });
+        this.setState({ allRecipes });
+      });
   }
 
   makeRemoteRequest = () => {
@@ -102,13 +120,11 @@ class Dashboard extends Component {
             ItemSeparatorComponent={this.renderSeparator}
             ListHeaderComponent={this.renderHeader}
             ListFooterComponent={this.renderFooter}
-            data={this.state.data}
+            data={this.state.allRecipes}
             renderItem={({ item }) => (
               <ListItem
                 roundAvatar
-                title={`${item.name.first} ${item.name.last}`}
-                subtitle={item.email}
-                avatar={{ uri: item.picture.thumbnail }}
+                title={`${item.recipe.title}`}
                 containerStyle={{ borderBottomWidth: 0 }}
                 />
             )}
