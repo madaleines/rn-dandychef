@@ -8,7 +8,6 @@ export default class AddRecipe extends React.Component {
   constructor(props) {
     super(props)
 
-    this.ref = firebase.firestore().collection('recipes');
     this.state = {
       loading: false,
       data: [],
@@ -20,12 +19,16 @@ export default class AddRecipe extends React.Component {
       description: '',
       allIngredients: [],
       allDirections: [],
-      isModalVisible: false,
+      isIngredientsModalVisible: false,
+      isDirectionsModalVisible: false,
     };
+    this.ref = firebase.firestore().collection('recipes');
     this.updateIndex = this.updateIndex.bind(this)
   }
 
-  showModal = (selectedItem) => this.setState({ isModalVisible: true, selectedItem })
+  showIngredientsModal = (selectedItem) => this.setState({ isIngredientsModalVisible: true, selectedItem })
+  showDirectionsModal = (selectedItem) => this.setState({ isDirectionsModalVisible: true, selectedItem })
+
   hideModal = () => this.setState({ isModalVisible: false })
 
   renderSeparator = () => {
@@ -62,8 +65,8 @@ export default class AddRecipe extends React.Component {
     this.ref.add({
       recipe: {
         description: this.state.description,
-        allIngredients: this.state.ingredients,
-        allDirections: this.state.directions
+        ingredients: this.state.allIngredients,
+        directions: this.state.allDirections
       },
     });
 
@@ -84,17 +87,6 @@ export default class AddRecipe extends React.Component {
     // code to add ListItem element to the description (maybe have it be a form user maunally types instead?)
   }
 
-  updateIngredients(value) {
-    this.setState(prevState => ({
-      allIngredients: [...prevState.allIngredients, value]
-    }))
-  }
-
-  updateDirections(value) {
-    this.setState(prevState => ({
-      allIngredients: [...prevState.allIngredients, value]
-    }))
-  }
 
   render() {
     const { selectedIndex } = this.state
@@ -104,81 +96,116 @@ export default class AddRecipe extends React.Component {
       <View style={styles.container}>
         <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
           <FlatList
-            data={ ['Select Ingredients', 'Select Directions'] }
+            data={ ['Select Ingredients']}
             renderItem={({ item }) => (
               <ListItem
                 title={item}
                 containerStyle={{ borderBottomWidth: 0 }}
                 buttonGroup
                 onPress={(item) => {
-                  this.showModal(item)}}
+                  this.showIngredientsModal(item)}}
                   style={styles.fab}
                   />
               )}
               keyExtractor={item => item}
               />
+          </List>
+
+          <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+            <FlatList
+              data={ ['Select Directions'] }
+              renderItem={({ item }) => (
+                <ListItem
+                  title={item}
+                  containerStyle={{ borderBottomWidth: 0 }}
+                  buttonGroup
+                  onPress={(item) => {
+                    this.showDirectionsModal(item)}}
+                    style={styles.fab}
+                    />
+                )}
+                keyExtractor={item => item}
+                />
+            </List>
+
+            <MultiPickerMaterialDialog
+              title={'Select Ingredients:'}
+              scrolled
+              items={this.props.navigation.state.params.textBlocks.map((row, index) => ({ value: index, label: row }))}
+              visible={this.state.isIngredientsModalVisible}
+              selectedItems={this.state.scrolledMultiPickerSelectedItems}
+              onCancel={() => this.setState({ isIngredientsModalVisible: false })}
+              onOk={result => {
+                console.log(result)
+                this.setState({
+                  allIngredients: result.selectedItems.map(item => item.label),
+                  isIngredientsModalVisible: false
+                });
+              }}
+              />
+
+            <MultiPickerMaterialDialog
+              title={'Select Directions:'}
+              scrolled
+              items={this.props.navigation.state.params.textBlocks.map((row, index) => ({ value: index, label: row }))}
+              visible={this.state.isDirectionsModalVisible}
+              selectedItems={this.state.scrolledMultiPickerSelectedItems}
+              onCancel={() => this.setState({ isDirectionsModalVisible: false })}
+              onOk={result => {
+                console.log(result)
+                this.setState({
+                  allDirections: result.selectedItems.map(item => item.label),
+                  isDirectionsModalVisible: false
+                });
+              }}
+              />
+
             <ButtonGroup
               onPress={this.updateIndex}
               selectedIndex={selectedIndex}
               buttons={buttons}
               containerStyle={{height: 50}}
               />
-          </List>
 
-          <MultiPickerMaterialDialog
-            title={'Select from the following:'}
-            scrolled
-            items={this.props.navigation.state.params.textBlocks.map((row, index) => ({ value: index, label: row }))}
-            visible={this.state.isModalVisible}
-            selectedItems={this.state.scrolledMultiPickerSelectedItems}
-            onCancel={() => this.setState({ isModalVisible: false })}
-            onOk={result => {
-              this.setState({ isModalVisible: false });
-              this.setState({
-                scrolledMultiPickerSelectedItems: result.selectedItems,
-              });
-            }}
-            />
-
-          <TouchableOpacity onPress={() => this.saveRecipe.bind(this)} style={styles.fab}>
-            <Text style={styles.fabIcon}>+</Text>
-          </TouchableOpacity>
-        </View>
-      );
+            <TouchableOpacity onPress={() => this.saveRecipe()} style={styles.fab}>
+              <Text style={styles.fabIcon}>+</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
     }
-  }
 
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    heading: {
-      height: 60,
-      backgroundColor: '#03A9F4',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    headingTest: {
-      fontSize: 20,
-      color: 'white',
-      fontWeight: 'bold',
-    },
-    fab: {
-      position: 'absolute',
-      width: 56,
-      height: 56,
-      alignItems: 'center',
-      justifyContent: 'center',
-      right: 20,
-      bottom: 20,
-      backgroundColor: '#03A9F4',
-      borderRadius: 30,
-      elevation: 8
-    },
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+      },
+      heading: {
+        height: 60,
+        backgroundColor: '#03A9F4',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      headingTest: {
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold',
+      },
+      fab: {
+        position: 'absolute',
+        width: 56,
+        height: 56,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 20,
+        bottom: 20,
+        backgroundColor: '#03A9F4',
+        borderRadius: 30,
+        elevation: 8
+      },
 
-    fabIcon: {
-      fontSize: 40,
-      color: 'white'
-    }
-  });
+      fabIcon: {
+        fontSize: 40,
+        color: 'white'
+      }
+    });
