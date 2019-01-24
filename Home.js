@@ -1,9 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Alert, Button } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, Alert, Button, Image } from 'react-native';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import type { User } from 'react-native-google-signin';
 import config from './config'; // see docs/CONTRIBUTING.md for details
+import SvgUri from 'react-native-svg-uri';
 
 type ErrorWithCode = Error & { code?: string };
 
@@ -76,7 +77,7 @@ export default class Home extends React.Component {
     } catch (error) {
       console.log(`Error in Home ${error}`)
       const errorMessage =
-        error.code === statusCodes.SIGN_IN_REQUIRED ? 'I love you :)' : error.message;
+      error.code === statusCodes.SIGN_IN_REQUIRED ? 'I love you :)' : error.message;
       this.setState({
         error: new Error(errorMessage),
       });
@@ -90,21 +91,12 @@ export default class Home extends React.Component {
     }
     return (
       <View style={[styles.container, { flex: 1 }]}>
-        {this.renderIsSignedIn()}
+        <Image
+          style={{width: 300, height: 270}}
+          source={require('./img/dclogo.png')}
+          />
         {this.renderSignInButton()}
       </View>
-    );
-  }
-
-  renderIsSignedIn() {
-    return (
-      <Button
-        onPress={async () => {
-          const isSignedIn = await GoogleSignin.isSignedIn();
-          Alert.alert(String(isSignedIn));
-        }}
-        title="check auth state"
-      />
     );
   }
 
@@ -115,7 +107,6 @@ export default class Home extends React.Component {
           Welcome {userInfo.user.name}
         </Text>
         <Text>Your user info: {JSON.stringify(userInfo.user)}</Text>
-
         <Button onPress={this._signOut} title="Log out" />
         {this.renderError()}
       </View>
@@ -130,8 +121,7 @@ export default class Home extends React.Component {
           size={GoogleSigninButton.Size.Standard}
           color={GoogleSigninButton.Color.Auto}
           onPress={this._signIn}
-        />
-        {this.renderError()}
+          />
       </View>
     );
   }
@@ -143,51 +133,51 @@ export default class Home extends React.Component {
     }
     const text = `${error.toString()} ${error.code ? error.code : ''}`;
     return <Text>{text}</Text>;
+    }
+
+    _signIn = async () => {
+      try {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+        this.setState({ userInfo, error: null, didSignIn: true }, () => {
+          const { navigate } = this.props.navigation;
+          navigate('Dashboard');
+        });
+      } catch (error) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          // sign in was cancelled
+          Alert.alert('cancelled');
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+          // operation in progress already
+          Alert.alert('in progress');
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          Alert.alert('play services not available or outdated');
+        } else {
+          Alert.alert('Something went wrong', error.toString());
+          this.setState({
+            error,
+          });
+        }
+      }
+    };
   }
 
-  _signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      this.setState({ userInfo, error: null, didSignIn: true }, () => {
-        const { navigate } = this.props.navigation;
-        navigate('Dashboard');
-      });
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // sign in was cancelled
-        Alert.alert('cancelled');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation in progress already
-        Alert.alert('in progress');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        Alert.alert('play services not available or outdated');
-      } else {
-        Alert.alert('Something went wrong', error.toString());
-        this.setState({
-          error,
-        });
-      }
-    }
-  };
-}
+  const styles = StyleSheet.create({
+    container: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 10,
+    },
+    instructions: {
+      textAlign: 'center',
+      color: '#333333',
+      marginBottom: 5,
+    },
+  });
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
-AppRegistry.registerComponent('DandyChefApp', () => DandyChefApp);
+  AppRegistry.registerComponent('DandyChefApp', () => DandyChefApp);
