@@ -14,7 +14,8 @@ class Dashboard extends Component {
       seed: 1,
       error: null,
       refreshing: false,
-      allRecipes: []
+      allRecipes: [],
+      filteredRecipes: []
     };
     this.unsubscribe = null;
     this.ref = firebase.firestore().collection('recipes')
@@ -30,29 +31,13 @@ class Dashboard extends Component {
       let newItem = documentSnapshot.data();
       newItem.id = documentSnapshot.id;
       allRecipes.push(newItem);
-      console.log(newItem)
     });
-    this.setState({ allRecipes });
-  }
 
-  makeRemoteRequest = () => {
-    const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
-    this.setState({ loading: true });
-    fetch(url)
-    .then(res => res.json())
-    .then(res => {
-      this.setState({
-        data: page === 1 ? res.results : [...this.state.data, ...res.results],
-        error: res.error || null,
-        loading: false,
-        refreshing: false
-      });
-    })
-    .catch(error => {
-      this.setState({ error, loading: false });
+    this.setState({
+      allRecipes: allRecipes,
+      filteredRecipes: allRecipes
     });
-  };
+  }
 
   renderSeparator = () => {
     return (
@@ -67,8 +52,23 @@ class Dashboard extends Component {
     );
   };
 
+  searchFilterFunction = text => {
+    const filteredData = this.state.filteredRecipes.filter(item => {
+      return item.title.startsWith(text);
+    });
+    this.setState({ allRecipes: filteredData });
+  };
+
   renderHeader = () => {
-    return <SearchBar placeholder="Search for a Saved Recipe..." lightTheme round />;
+    return  (
+      <SearchBar
+        placeholder="Type Here..."
+        lightTheme
+        round
+        onChangeText={text => this.searchFilterFunction(text)}
+        autoCorrect={false}
+        />
+    );
   };
 
   renderFooter = () => {
