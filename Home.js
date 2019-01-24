@@ -170,8 +170,6 @@ export default class Home extends React.Component {
       }
     }
   };
-
-
 }
 
 const styles = StyleSheet.create({
@@ -192,4 +190,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('GoogleSigninSampleApp', () => GoogleSigninSampleApp);
+AppRegistry.registerComponent('DandyChefApp', () => DandyChefApp);

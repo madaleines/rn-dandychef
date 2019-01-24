@@ -95,6 +95,16 @@ class Dashboard extends Component {
     this.props.navigation.navigate('SnapRecipe')
   }
 
+  displayRecipe(value) {
+    console.log(value)
+    this.props.navigation.navigate('DisplayRecipe', {
+      title: value.title,
+      description: value.description,
+      ingredients: value.ingredients,
+      directions: value.directions
+    })
+  }
+
   render() {
     return (
       <View>
@@ -123,9 +133,10 @@ class Dashboard extends Component {
                 roundAvatar
                 title={`${item.title}`}
                 containerStyle={{ borderBottomWidth: 0 }}
+                onPress={() => {this.displayRecipe(item)}}
                 />
             )}
-            keyExtractor={item => item.email}
+            keyExtractor={item => item}
             />
         </List>
       </View>
